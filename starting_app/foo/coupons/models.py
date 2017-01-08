@@ -17,20 +17,24 @@ class Coupon(models.Model):
     - They can be single-use per user, or single-use globally.
     - They can be infinite per a specific user, or infinite globally.
     - They can be used a specific number of times per user, or globally.
+    - (They can be used by a specific list of users?)
     """
 
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    # The coupon code itself
+    # The coupon code itself (so it can be mixed case in presentation... meh)
     code = models.CharField(max_length=64)
     # the lowercase version to simplify some code (for now).
     code_l = models.CharField(max_length=64)
 
+    # Whether it's a percentage off or a value.
+    type = models.CharField(choices=COUPON_TYPES)
+
 
 class ClaimedCoupon(models.Model):
     """
-    These are the instances of claimed coupons.
+    These are the instances of claimed coupons, each is an individual usage of a coupon by someone in the system.
     """
 
     added = models.DateTimeField(auto_now_add=True)
