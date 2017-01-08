@@ -34,14 +34,14 @@ class Coupon(models.Model):
     code_l = models.CharField(max_length=64)
 
     # Whether it's a percentage off or a value.
-    type = models.CharField(choices=COUPON_TYPES)
+    type = models.CharField(max_length=16, choices=COUPON_TYPES)
 
     # When it expires (if it expires)
     expires = models.DateTimeField()
 
     # Is this coupon bound to a specific user?
     bound = models.BooleanField(default=False)
-    bind = models.CharField(choices=BINDING_TYPES, default='user')
+    bind = models.CharField(max_length=16, choices=BINDING_TYPES, default='user')
     binding = models.CharField(max_length=256, blank=True, null=True)
     # We'll validate the binding's value based on the type, either it's an int that is a user's pk or a valid email
     # string.  You'll be able to query for coupons with a binding value that's a pk, because you can just provide an
