@@ -30,11 +30,11 @@ class CouponSerializer(serializers.ModelSerializer):
         # Verify if it's bound, that the user exists or the email is valid.
         if 'bound' in data and data['bound']:
             if data['bind'] == 'user':
-                if 'binding_user' not in data:
-                    raise serializers.ValidationError("Bound to user, but binding_user field not specified.")
+                if 'user' not in data:
+                    raise serializers.ValidationError("Bound to user, but user field not specified.")
             elif data['bind'] == 'email':
-                if 'binding_email' not in data:
-                    raise serializers.ValidationError("Bound to email, but binding_email field not specified.")
+                if 'email' not in data:
+                    raise serializers.ValidationError("Bound to email, but email field not specified.")
 
         return data
 
@@ -60,8 +60,8 @@ class CouponSerializer(serializers.ModelSerializer):
         model = apps.get_model('coupons.Coupon')
         fields = ('created', 'updated', 'code',
                   'code_l', 'type', 'expires',
-                  'bound', 'bind', 'binding_email',
-                  'binding_user', 'repeat', 'value',
+                  'bound', 'bind', 'email',
+                  'user', 'repeat', 'value',
                   'id')
 
 

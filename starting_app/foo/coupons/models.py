@@ -18,13 +18,10 @@ BINDING_TYPES = (
 try:
     user = settings.AUTH_USER_MODEL
 except AttributeError:
+    # get_user_model isn't working at this point in loading.
     from django.contrib.auth.models import User as user
 
 #user = get_user_model()
-
-import sys
-sys.stderr.write('user: %s\n' % user)
-
 
 class Coupon(models.Model):
     """
@@ -61,8 +58,8 @@ class Coupon(models.Model):
     # Is this coupon bound to a specific user?
     bound = models.BooleanField(default=False)
     bind = models.CharField(max_length=16, choices=BINDING_TYPES, default='user')
-    binding_email = models.EmailField(max_length=256, blank=True, null=True)
-    binding_user = models.ForeignKey(user, blank=True, null=True)
+    email = models.EmailField(max_length=256, blank=True, null=True)
+    user = models.ForeignKey(user, blank=True, null=True)
 
     # How many times this coupon can be used, -1 == infinitely, otherwise it's a number, such as 1 or many.
     # To determine if you can redeem it, it'll check this value against the number of corresponding ClaimedCoupons.

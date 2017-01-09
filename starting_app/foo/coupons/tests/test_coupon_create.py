@@ -132,12 +132,12 @@ class CouponCreateTests(BasicTest):
         """
 
         coupon = {
-            'code':    'ASDF',
-            'type':    'percent',
-            'bound':   True,
-            'bind':    'user',
-            'binding_user': self.user.id,
-            'repeat':  1,
+            'code':   'ASDF',
+            'type':   'percent',
+            'bound':  True,
+            'bind':   'user',
+            'user':   self.user.id,
+            'repeat': 1,
         }
 
         self.login(username='admin')
