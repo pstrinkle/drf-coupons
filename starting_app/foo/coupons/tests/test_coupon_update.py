@@ -141,7 +141,6 @@ class CouponUpdateTests(BasicTest):
         coupon2['code_l'] = coupon2['code'].lower()
         self.verify_built(coupon2, response.data)
 
-
         # Update first coupon to be the same as the second.
         coupon['code'] = 'SECOND'
         self.login(username='admin')
