@@ -4,7 +4,7 @@ from rest_framework import status
 from coupons.tests.base import BasicTest
 
 
-class CouponCreateTests(BasicTest):
+class CouponUpdateTests(BasicTest):
 
     def setUp(self):
         u = get_user_model()

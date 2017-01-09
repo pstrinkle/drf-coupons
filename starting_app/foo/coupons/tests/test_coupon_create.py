@@ -90,6 +90,22 @@ class CouponCreateTests(BasicTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.logout()
 
+    def test_cant_create_coupon_invalid_percentage(self):
+        """
+        Verify you can't provide an invalid percentage.
+        """
+
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'value':  2,
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.logout()
+
     def test_can_create_coupon_expires(self):
         """
         Verify you can set an expiration date, but it must be in the future.
@@ -174,27 +190,83 @@ class CouponCreateTests(BasicTest):
         Handle case III defined in the README.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'bound':  True,
+            'bind':   'user',
+            'user':   self.user.id,
+            'repeat': 0,
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_iv(self):
         """
         Handle case IV defined in the README.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_v(self):
         """
         Handle case V defined in the README.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'bound':  True,
+            'bind':   'user',
+            'user':   self.user.id,
+            'repeat': 10,
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_vi(self):
         """
         Handle case VI defined in the README.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'repeat': 10,
+        }
 
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
 
