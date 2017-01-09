@@ -47,6 +47,8 @@ class CouponSerializer(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError("Creating coupon with code that violates uniqueness constraint.")
 
+        data['code_l'] = data['code'].lower()
+
         return data
 
     def validate_repeat(self, value):
@@ -60,11 +62,7 @@ class CouponSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        validated_data['code_l'] = validated_data['code'].lower()
-
-        coupon = Coupon.objects.create(**validated_data)
-
-        return coupon
+        return Coupon.objects.create(**validated_data)
 
     class Meta:
         model = apps.get_model('coupons.Coupon')
