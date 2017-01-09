@@ -36,6 +36,17 @@ class CouponSerializer(serializers.ModelSerializer):
                 if 'email' not in data:
                     raise serializers.ValidationError("Bound to email, but email field not specified.")
 
+        # Verify the lowercase code is unique.
+        # IntegrityError: UNIQUE constraint failed: coupons_coupon.code_l and not returning 400.
+        qs = Coupon.objects.filter(code_l=data['code'].lower())
+        if qs.count() > 0:
+            # there was a matching one, is it this one?
+            if self.instance:
+                if data['code'].lower() != self.instance.code_l:
+                    raise serializers.ValidationError("Coupon code being updated to a code that already exists.")
+            else:
+                raise serializers.ValidationError("Creating coupon with code that violates uniqueness constraint.")
+
         return data
 
     def validate_repeat(self, value):
@@ -45,17 +56,6 @@ class CouponSerializer(serializers.ModelSerializer):
 
         if value < 0:
             raise serializers.ValidationError("Repeat field can be 0 for infinite, otherwise must be greater than 0.")
-
-        return value
-
-    def validate_code(self, value):
-        """
-        An explicit check here, because it was just throwing:
-        IntegrityError: UNIQUE constraint failed: coupons_coupon.code_l and not returning 400.
-        """
-
-        if Coupon.objects.filter(code_l=value.lower()).count() > 0:
-            raise serializers.ValidationError("Coupon code violate uniqueness constraint.")
 
         return value
 
