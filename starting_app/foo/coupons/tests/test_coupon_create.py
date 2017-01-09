@@ -9,8 +9,8 @@ class CouponCreateTests(BasicTest):
 
     def setUp(self):
         u = get_user_model()
-        u.objects.create_superuser('admin', 'john@snow.com', 'password123')
-        self.user = u.objects.create_user('user', 'me@snow.com', 'password123')
+        u.objects.create_superuser('admin', 'john@snow.com', self.PW)
+        self.user = u.objects.create_user('user', 'me@snow.com', self.PW)
 
     def test_can_create_coupon(self):
         """
@@ -29,7 +29,6 @@ class CouponCreateTests(BasicTest):
 
         coupon['code_l'] = coupon['code'].lower()
         coupon['repeat'] = 0
-        coupon['bind'] = 'user'
         coupon['bound'] = False
 
         self.verify_built(coupon, response.data)
@@ -51,7 +50,6 @@ class CouponCreateTests(BasicTest):
 
         coupon['code_l'] = coupon['code'].lower()
         coupon['repeat'] = 0
-        coupon['bind'] = 'user'
         coupon['bound'] = False
 
         self.verify_built(coupon, response.data)
@@ -74,7 +72,6 @@ class CouponCreateTests(BasicTest):
 
         coupon['code_l'] = coupon['code'].lower()
         coupon['repeat'] = 0
-        coupon['bind'] = 'user'
         coupon['bound'] = False
 
         self.verify_built(coupon, response.data)
@@ -151,7 +148,6 @@ class CouponCreateTests(BasicTest):
             'code':   'ASDF',
             'type':   'percent',
             'bound':  True,
-            'bind':   'user',
             'user':   self.user.id,
             'repeat': 1,
         }
@@ -194,7 +190,6 @@ class CouponCreateTests(BasicTest):
             'code':   'ASDF',
             'type':   'percent',
             'bound':  True,
-            'bind':   'user',
             'user':   self.user.id,
             'repeat': 0,
         }
@@ -236,7 +231,6 @@ class CouponCreateTests(BasicTest):
             'code':   'ASDF',
             'type':   'percent',
             'bound':  True,
-            'bind':   'user',
             'user':   self.user.id,
             'repeat': 10,
         }

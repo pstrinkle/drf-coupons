@@ -8,8 +8,8 @@ class CouponUpdateTests(BasicTest):
 
     def setUp(self):
         u = get_user_model()
-        u.objects.create_superuser('admin', 'john@snow.com', 'password123')
-        self.user = u.objects.create_user('user', 'me@snow.com', 'password123')
+        u.objects.create_superuser('admin', 'john@snow.com', self.PW)
+        self.user = u.objects.create_user('user', 'me@snow.com', self.PW)
 
     def test_can_update_coupon(self):
         """
@@ -28,7 +28,6 @@ class CouponUpdateTests(BasicTest):
 
         coupon['code_l'] = coupon['code'].lower()
         coupon['repeat'] = 0
-        coupon['bind'] = 'user'
         coupon['bound'] = False
 
         self.verify_built(coupon, response.data)
@@ -58,7 +57,6 @@ class CouponUpdateTests(BasicTest):
 
         coupon['code_l'] = coupon['code'].lower()
         coupon['repeat'] = 0
-        coupon['bind'] = 'user'
         coupon['bound'] = False
 
         self.verify_built(coupon, response.data)
@@ -91,7 +89,6 @@ class CouponUpdateTests(BasicTest):
 
         coupon['code_l'] = coupon['code'].lower()
         coupon['repeat'] = 0
-        coupon['bind'] = 'user'
         coupon['bound'] = False
 
         self.verify_built(coupon, response.data)
@@ -149,6 +146,6 @@ class CouponUpdateTests(BasicTest):
         self.logout()
 
     def test_can_update_coupon_change_binding(self):
-        # XXX: Verify we can update a coupon from binding to a user to an email.
+        # XXX: Verify we can update a coupon from bound to not bound, and vice versa.
 
         self.assertTrue(True)

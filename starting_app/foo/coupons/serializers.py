@@ -29,12 +29,8 @@ class CouponSerializer(serializers.ModelSerializer):
 
         # Verify if it's bound, that the user exists or the email is valid.
         if 'bound' in data and data['bound']:
-            if data['bind'] == 'user':
-                if 'user' not in data:
-                    raise serializers.ValidationError("Bound to user, but user field not specified.")
-            elif data['bind'] == 'email':
-                if 'email' not in data:
-                    raise serializers.ValidationError("Bound to email, but email field not specified.")
+            if 'user' not in data:
+                raise serializers.ValidationError("Bound to user, but user field not specified.")
 
         # Verify the lowercase code is unique.
         # IntegrityError: UNIQUE constraint failed: coupons_coupon.code_l and not returning 400.
@@ -68,9 +64,8 @@ class CouponSerializer(serializers.ModelSerializer):
         model = apps.get_model('coupons.Coupon')
         fields = ('created', 'updated', 'code',
                   'code_l', 'type', 'expires',
-                  'bound', 'bind', 'email',
-                  'user', 'repeat', 'value',
-                  'id')
+                  'bound', 'user', 'repeat',
+                  'value', 'id')
 
 
 class ClaimedCouponSerializer(serializers.ModelSerializer):
@@ -80,5 +75,5 @@ class ClaimedCouponSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = apps.get_model('coupons.ClaimedCoupon')
-        fields = ('redeemed', 'coupon', 'id')
+        fields = ('redeemed', 'coupon', 'user', 'id')
 
