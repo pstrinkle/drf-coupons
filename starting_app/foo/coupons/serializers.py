@@ -46,6 +46,8 @@ class CouponSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError("Repeat field can be 0 for infinite, otherwise must be greater than 0.")
 
+        return value
+
     def validate_code(self, value):
         """
         An explicit check here, because it was just throwing:
