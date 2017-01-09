@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 
 COUPON_TYPES = (
@@ -11,6 +13,17 @@ BINDING_TYPES = (
     ('user', 'user'),
     ('email', 'email'),
 )
+
+
+try:
+    user = settings.AUTH_USER_MODEL
+except AttributeError:
+    from django.contrib.auth.models import User as user
+
+#user = get_user_model()
+
+import sys
+sys.stderr.write('user: %s\n' % user)
 
 
 class Coupon(models.Model):
@@ -31,21 +44,25 @@ class Coupon(models.Model):
     # The coupon code itself (so it can be mixed case in presentation... meh)
     code = models.CharField(max_length=64)
     # the lowercase version to simplify some code (for now).
-    code_l = models.CharField(max_length=64)
+    #
+    # usually blank=True goes with null=True, but in this case, we want the admin to know it's optional, but the
+    # database does require it, and it needs to be unique.
+    code_l = models.CharField(max_length=64, blank=True, unique=True)
 
     # Whether it's a percentage off or a value.
     type = models.CharField(max_length=16, choices=COUPON_TYPES)
 
     # When it expires (if it expires)
-    expires = models.DateTimeField()
+    expires = models.DateTimeField(blank=True, null=True)
+
+    # The values (either percentage based, or value based), if percentage based make sure it's no greater than 1.0
+    value = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
 
     # Is this coupon bound to a specific user?
     bound = models.BooleanField(default=False)
     bind = models.CharField(max_length=16, choices=BINDING_TYPES, default='user')
-    binding = models.CharField(max_length=256, blank=True, null=True)
-    # We'll validate the binding's value based on the type, either it's an int that is a user's pk or a valid email
-    # string.  You'll be able to query for coupons with a binding value that's a pk, because you can just provide an
-    # int via the URL query string and it should process it properly.
+    binding_email = models.EmailField(max_length=256, blank=True, null=True)
+    binding_user = models.ForeignKey(user, blank=True, null=True)
 
     # How many times this coupon can be used, -1 == infinitely, otherwise it's a number, such as 1 or many.
     # To determine if you can redeem it, it'll check this value against the number of corresponding ClaimedCoupons.
@@ -76,5 +93,4 @@ class ClaimedCoupon(models.Model):
 
     # Every claimed coupon should point back to a Coupon in the system.
     coupon = models.ForeignKey('Coupon')
-
-
+    user = models.ForeignKey(user)
