@@ -7,7 +7,7 @@ It supports the following variations of coupons:
 2. They can be bound to a specific user in the system, or an email address (not yet in the system).
 3. They can be single-use:
    1. per user (a pre-specified user can use it once), `case I`
-   2. globally (any user in the system can use it, but only oncee) `case II`
+   2. globally (any user in the system can use it, but only once) `case II`
 4. They can be infinite:
    1. per a specific user (a pre-specified user can use it repeatedly infinitely) `case III`
    2. infinite globally (any user can use it repeatedly infinitely) `case IV`

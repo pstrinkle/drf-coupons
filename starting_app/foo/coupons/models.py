@@ -61,9 +61,9 @@ class Coupon(models.Model):
     email = models.EmailField(max_length=256, blank=True, null=True)
     user = models.ForeignKey(user, blank=True, null=True)
 
-    # How many times this coupon can be used, -1 == infinitely, otherwise it's a number, such as 1 or many.
+    # How many times this coupon can be used, 0 == infinitely, otherwise it's a number, such as 1 or many.
     # To determine if you can redeem it, it'll check this value against the number of corresponding ClaimedCoupons.
-    repeat = models.IntegerField(default=-1)
+    repeat = models.IntegerField(default=0)
 
     # single-use per user
     # repeat = 1, bound = True, binding = user_id
@@ -71,14 +71,14 @@ class Coupon(models.Model):
     # repeat = 1, bound = False
 
     # infinite-user per user
-    # repeat = -1, bound = True
+    # repeat = 0, bound = True
     # infinite globally
-    # repeat = -1, bound = False
+    # repeat = 0, bound = False
 
     # specific number of times per user
-    # repeat => 0, bound = True, binding = user_id
+    # repeat => X, bound = True, binding = user_id
     # specific number of times globally
-    # repeat => 0, bound = False
+    # repeat => X, bound = False
 
 
 class ClaimedCoupon(models.Model):

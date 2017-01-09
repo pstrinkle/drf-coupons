@@ -28,7 +28,7 @@ class CouponCreateTests(BasicTest):
         self.logout()
 
         coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = -1
+        coupon['repeat'] = 0
         coupon['bind'] = 'user'
         coupon['bound'] = False
 
@@ -50,7 +50,7 @@ class CouponCreateTests(BasicTest):
         self.logout()
 
         coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = -1
+        coupon['repeat'] = 0
         coupon['bind'] = 'user'
         coupon['bound'] = False
 
@@ -73,7 +73,7 @@ class CouponCreateTests(BasicTest):
         self.logout()
 
         coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = -1
+        coupon['repeat'] = 0
         coupon['bind'] = 'user'
         coupon['bound'] = False
 
@@ -154,7 +154,20 @@ class CouponCreateTests(BasicTest):
         Handle case II defined in the README.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'repeat': 1,
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_iii(self):
         """
