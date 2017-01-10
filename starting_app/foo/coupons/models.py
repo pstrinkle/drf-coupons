@@ -72,6 +72,13 @@ class Coupon(models.Model):
     # specific number of times globally
     # repeat => X, bound = False
 
+    def redeem(self, user):
+        """
+        Attempt to redeem the coupon
+        """
+
+        return
+
 
 class ClaimedCoupon(models.Model):
     """

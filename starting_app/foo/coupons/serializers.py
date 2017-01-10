@@ -73,6 +73,26 @@ class ClaimedCouponSerializer(serializers.ModelSerializer):
     RW ClaimedCoupon serializer.
     """
 
+    def validate(self, data):
+        """
+        Verify the coupon can be redeemed.
+        """
+
+        coupon = data['coupon']
+        user = data['user']
+
+        # Is the coupon expired?
+        if coupon.expires and coupon.expires < now():
+            raise serializers.ValidationError("Coupon has expired.")
+
+        # Is the coupon bound to someone else?
+        if coupon.bound and coupon.user.id != user.id:
+            raise serializers.ValidationError("Coupon bound to another user.")
+
+        # Is the coupon redeemed aleady beyond what's allowed?
+
+        return data
+
     class Meta:
         model = apps.get_model('coupons.ClaimedCoupon')
         fields = ('redeemed', 'coupon', 'user', 'id')

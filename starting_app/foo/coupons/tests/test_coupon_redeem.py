@@ -29,31 +29,97 @@ class CouponRedeemTests(BasicTest):
         self.login(username='admin')
         response = self.client.post('/coupon', coupon, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        coupon_id = response.data['id']
         self.logout()
 
         # sleep until it's expired.
         sleep(5)
 
-
+        self.login(username='admin')
+        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.logout()
 
     def test_cant_redeem_wrong_user(self):
         """
         Verify that you can't redeem a coupon that is bound to another user.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'bound':  True,
+            'user':   self.user.id,
+            'repeat': 1,
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        coupon_id = response.data['id']
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
+
+        self.login(username='admin')
+        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.logout()
 
     def test_can_redeem_nonbound(self):
         """
         Verify that you can redeem a coupon that isn't bound to a specific user.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code': 'ASDF',
+            'type': 'percent',
+        }
+
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        coupon_id = response.data['id']
+        self.logout()
+
+        self.login(username='admin')
+        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
 
     def test_can_redeem_bound_to_you(self):
         """
         Verify that you can redeem a bound coupon if it's bound to you.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'bound':  True,
+            'user':   self.user.id,
+            'repeat': 1,
+        }
 
+        self.login(username='admin')
+        response = self.client.post('/coupon', coupon, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        coupon_id = response.data['id']
+        self.logout()
+
+        coupon['code_l'] = coupon['code'].lower()
+
+        self.verify_built(coupon, response.data)
+
+        self.login(username='user')
+        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.logout()
+
+    def test_cant_redeem_beyond_repeat(self):
+        """
+        Verify you can't redeem a coupon more than allowed.
+        """
+
+        self.assertTrue(True)
