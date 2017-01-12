@@ -16,7 +16,9 @@ A django-rest-framework application that provides many varieties of coupons
    $ python manage.py migrate
    ```
 
-4. Specify permissions for interacting with coupon endpoints.
+## Usage
+
+1. Specify permissions for interacting with coupon endpoints.
 
    You can specify a list of groups that can perform specific actions against the coupons, such as restricting who can
    create or list coupons.
@@ -35,7 +37,7 @@ A django-rest-framework application that provides many varieties of coupons
 
    You don't need to specify every endpoint in the list and can provide an empty list.
 
-5. Communicate with coupon endpoints.
+2. Communicate with coupon endpoints.
 
    You can place the urls into a subpath, however you like:
 
