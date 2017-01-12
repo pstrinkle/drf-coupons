@@ -89,7 +89,7 @@ class ClaimedCouponSerializer(serializers.ModelSerializer):
         if coupon.bound and coupon.user.id != user.id:
             raise serializers.ValidationError("Coupon bound to another user.")
 
-        # Is the coupon redeemed aleady beyond what's allowed?
+        # Is the coupon redeemed already beyond what's allowed?
 
         return data
 

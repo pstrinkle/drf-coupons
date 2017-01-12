@@ -1,4 +1,7 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -6,6 +9,31 @@ from rest_framework.response import Response
 
 from coupons.models import Coupon, ClaimedCoupon
 from coupons.serializers import CouponSerializer, ClaimedCouponSerializer
+
+from django.contrib.auth.decorators import user_passes_test
+
+
+# https://djangosnippets.org/snippets/1703/
+def group_required(api_command):
+    def in_groups(u):
+        if u.is_authenticated():
+            # supervisor can do anything
+            if u.is_superuser:
+                return True
+
+            # coupons have permissions set
+            if settings.COUPON_PERMISSIONS:
+                group_names = settings.COUPON_PERMISSIONS[api_command]
+
+                # but no group specified, so anyone can.
+                if len(group_names) == 0:
+                    return True
+
+                # group specified, so only those in the group can.
+                if bool(u.groups.filter(name__in=group_names)):
+                    return True
+        return False
+    return user_passes_test(in_groups)
 
 
 class CouponViewSet(viewsets.ModelViewSet):
@@ -15,6 +43,19 @@ class CouponViewSet(viewsets.ModelViewSet):
 
     serializer_class = CouponSerializer
     queryset = Coupon.objects.all()
+
+    @method_decorator(group_required('CREATE'))
+    def create(self, request, **kwargs):
+        """
+        Create a coupon
+        """
+
+        serializer = CouponSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, pk=None, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
