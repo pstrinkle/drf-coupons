@@ -46,15 +46,15 @@ A django-rest-framework application that provides many varieties of coupons
    ]
    ```
 
-| Endpoint                  | Details                                        |
-| ------------------------- | ---------------------------------------------- |
-| `GET /coupon`             | List all coupons                               |
-| `GET /coupon/{pk}`        | Retrieve details about a coupon by database id |
-| `POST /coupon`            | Create a new coupon                            |
-| `PUT /coupon/{pk}`        | Update a coupon                                |
-| `DELETE /coupon/{pk}`     | Delete a coupon                                |
-| `PUT /coupon/{pk}/redeem` | Redeem a coupon by database id                 |
-| `PATCH /coupon/{pk}`      | Not supported                                  |
+   | Endpoint                  | Details                                        |
+   | ------------------------- | ---------------------------------------------- |
+   | `GET /coupon`             | List all coupons                               |
+   | `GET /coupon/{pk}`        | Retrieve details about a coupon by database id |
+   | `POST /coupon`            | Create a new coupon                            |
+   | `PUT /coupon/{pk}`        | Update a coupon                                |
+   | `DELETE /coupon/{pk}`     | Delete a coupon                                |
+   | `PUT /coupon/{pk}/redeem` | Redeem a coupon by database id                 |
+   | `PATCH /coupon/{pk}`      | Not supported                                  |
 
 ## Coupon Types
 
