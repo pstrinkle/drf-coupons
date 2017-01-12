@@ -18,33 +18,33 @@ A django-rest-framework application that provides many varieties of coupons
 
 4. Specify permissions for interacting with coupon endpoints.
 
-You can specify a list of groups that can perform specific actions against the coupons, such as restricting who can
-create or list coupons.
+   You can specify a list of groups that can perform specific actions against the coupons, such as restricting who can
+   create or list coupons.
 
-By default all endpoints are open.
+   By default all endpoints are open.
 
-```
-COUPON_PERMISSIONS = {
-    'CREATE': ['groupa', 'groupb'],
-    'LIST': ['groupa'],
-    'DELETE': ['groupb'],
-    'RETRIEVE': ['groupa'],
-    'UPDATE': ['groupb'],
-}
-```
+   ```
+   COUPON_PERMISSIONS = {
+       'CREATE': ['groupa', 'groupb'],
+       'LIST': ['groupa'],
+       'DELETE': ['groupb'],
+       'RETRIEVE': ['groupa'],
+       'UPDATE': ['groupb'],
+   }
+   ```
 
-You don't need to specify every endpoint in the list and can provide an empty list.
+   You don't need to specify every endpoint in the list and can provide an empty list.
 
 5. Communicate with coupon endpoints.
 
-You can place the urls into a subpath, however you like:
+   You can place the urls into a subpath, however you like:
 
-```
-urlpatterns = [
-    # just adding here, but you can put into a subordinate path.
-    url(r'^', include('coupons.urls')),
-]
-```
+   ```
+   urlpatterns = [
+       # just adding here, but you can put into a subordinate path.
+       url(r'^', include('coupons.urls')),
+   ]
+   ```
 
 | Endpoint                  | Details                                        |
 | ------------------------- | ---------------------------------------------- |
