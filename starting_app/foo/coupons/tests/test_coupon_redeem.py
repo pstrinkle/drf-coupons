@@ -26,19 +26,20 @@ class CouponRedeemTests(BasicTest):
             'expires': str(future),
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        coupon_id = response.data['id']
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            coupon_id = response.data['id']
+            self.logout()
 
-        # sleep until it's expired.
-        sleep(5)
+            # sleep until it's expired.
+            sleep(5)
 
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.logout()
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.logout()
 
     def test_cant_redeem_wrong_user(self):
         """
@@ -53,20 +54,21 @@ class CouponRedeemTests(BasicTest):
             'repeat': 1,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        coupon_id = response.data['id']
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            coupon_id = response.data['id']
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.logout()
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.logout()
 
     def test_can_redeem_nonbound(self):
         """
@@ -78,16 +80,17 @@ class CouponRedeemTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        coupon_id = response.data['id']
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            coupon_id = response.data['id']
+            self.logout()
 
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
     def test_can_redeem_bound_to_you(self):
         """
@@ -102,20 +105,21 @@ class CouponRedeemTests(BasicTest):
             'repeat': 1,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        coupon_id = response.data['id']
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            coupon_id = response.data['id']
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
-        self.login(username='user')
-        response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+            self.login(username='user')
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
     def test_cant_redeem_beyond_repeat(self):
         """

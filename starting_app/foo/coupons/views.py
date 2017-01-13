@@ -2,6 +2,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 
+from rest_framework import filters
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -41,8 +42,20 @@ class CouponViewSet(viewsets.ModelViewSet):
     API endpoint that lets you create, delete, retrieve coupons.
     """
 
+    filter_backends = (filters.SearchFilter,)
     serializer_class = CouponSerializer
     queryset = Coupon.objects.all()
+#    search_fields = ('code', 'code_l')
+
+#    def list(self, request, **kwargs):
+#        """
+#        List coupons
+#        """
+#
+#        queryset = Coupon.objects.all()
+#        serializer = CouponSerializer(queryset, many=True, context={'request': request})
+#
+#        return Response(serializer.data)
 
     @method_decorator(group_required('CREATE'))
     def create(self, request, **kwargs):
@@ -60,6 +73,7 @@ class CouponViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    @method_decorator(group_required('UPDATE'))
     def update(self, request, pk=None, **kwargs):
         """
         This forces it to return a 202 upon success instead of 200.

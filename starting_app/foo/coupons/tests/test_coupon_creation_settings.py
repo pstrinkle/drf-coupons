@@ -24,12 +24,13 @@ class CouponCreateSettingsTests(BasicTest):
             'type': 'percent',
         }
 
-        with self.settings(COUPON_PERMISSIONS={'CREATE': ['group_a']}):
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            with self.settings(COUPON_PERMISSIONS={'CREATE': ['group_a']}):
 
-            self.login(username='user')
-            response = self.client.post('/coupon', coupon, format='json')
-            self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-            self.logout()
+                self.login(username='user')
+                response = self.client.post('/coupon', coupon, format='json')
+                self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+                self.logout()
 
     def test_can_create_coupon_if_group_empty(self):
         """
@@ -41,18 +42,19 @@ class CouponCreateSettingsTests(BasicTest):
             'type': 'percent',
         }
 
-        with self.settings(COUPON_PERMISSIONS={'CREATE': []}):
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            with self.settings(COUPON_PERMISSIONS={'CREATE': []}):
 
-            self.login(username='user')
-            response = self.client.post('/coupon', coupon, format='json')
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.logout()
+                self.login(username='user')
+                response = self.client.post('/coupon', coupon, format='json')
+                self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                self.logout()
 
-            coupon['code_l'] = coupon['code'].lower()
-            coupon['repeat'] = 0
-            coupon['bound'] = False
+                coupon['code_l'] = coupon['code'].lower()
+                coupon['repeat'] = 0
+                coupon['bound'] = False
 
-            self.verify_built(coupon, response.data)
+                self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_if_in_group(self):
         """
@@ -67,15 +69,16 @@ class CouponCreateSettingsTests(BasicTest):
         g, _ = Group.objects.get_or_create(name='group_a')
         g.user_set.add(self.user)
 
-        with self.settings(COUPON_PERMISSIONS={'CREATE': ['group_a']}):
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            with self.settings(COUPON_PERMISSIONS={'CREATE': ['group_a']}):
 
-            self.login(username='user')
-            response = self.client.post('/coupon', coupon, format='json')
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.logout()
+                self.login(username='user')
+                response = self.client.post('/coupon', coupon, format='json')
+                self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                self.logout()
 
-            coupon['code_l'] = coupon['code'].lower()
-            coupon['repeat'] = 0
-            coupon['bound'] = False
+                coupon['code_l'] = coupon['code'].lower()
+                coupon['repeat'] = 0
+                coupon['bound'] = False
 
-            self.verify_built(coupon, response.data)
+                self.verify_built(coupon, response.data)

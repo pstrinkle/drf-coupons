@@ -21,24 +21,25 @@ class CouponUpdateTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = 0
-        coupon['bound'] = False
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
-        coupon['repeat'] = 50
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s' % response.data['id'], coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.logout()
+            coupon['repeat'] = 50
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s' % response.data['id'], coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+            self.logout()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_update_coupon_lowercase_verification(self):
         """
@@ -50,27 +51,28 @@ class CouponUpdateTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = 0
-        coupon['bound'] = False
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
-        coupon['code'] = 'PERSON'
-        del coupon['code_l']
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s' % response.data['id'], coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.logout()
+            coupon['code'] = 'PERSON'
+            del coupon['code_l']
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s' % response.data['id'], coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_update_ignores_code_lowercase(self):
         """
@@ -82,27 +84,28 @@ class CouponUpdateTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = 0
-        coupon['bound'] = False
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
-        # code_l doesn't match anymore.
-        coupon['code'] = 'PERSON'
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s' % response.data['id'], coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.logout()
+            # code_l doesn't match anymore.
+            coupon['code'] = 'PERSON'
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s' % response.data['id'], coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_cant_update_coupon_duplicate_name(self):
         """
@@ -119,31 +122,32 @@ class CouponUpdateTests(BasicTest):
             'type': 'percent',
         }
 
-        # First coupon
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
-        coupon_id = response.data['id']
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            # First coupon
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
+            coupon_id = response.data['id']
 
-        coupon['code_l'] = coupon['code'].lower()
-        self.verify_built(coupon, response.data)
+            coupon['code_l'] = coupon['code'].lower()
+            self.verify_built(coupon, response.data)
 
-        # Second coupon
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon2, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+            # Second coupon
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon2, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon2['code_l'] = coupon2['code'].lower()
-        self.verify_built(coupon2, response.data)
+            coupon2['code_l'] = coupon2['code'].lower()
+            self.verify_built(coupon2, response.data)
 
-        # Update first coupon to be the same as the second.
-        coupon['code'] = 'SECOND'
-        self.login(username='admin')
-        response = self.client.put('/coupon/%s' % coupon_id, coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.logout()
+            # Update first coupon to be the same as the second.
+            coupon['code'] = 'SECOND'
+            self.login(username='admin')
+            response = self.client.put('/coupon/%s' % coupon_id, coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.logout()
 
     def test_can_update_coupon_change_binding(self):
         # XXX: Verify we can update a coupon from bound to not bound, and vice versa.

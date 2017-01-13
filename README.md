@@ -76,3 +76,8 @@ It supports the following variations of coupons:
 6. (They can be used by a specific list of users?) ... maybe later.
 
 You create coupons in the system that are then claimed by users.
+
+## Developing
+
+The unit-tests should automatically be run when you run `python manage.py test` and they are isolated.
+

@@ -22,16 +22,17 @@ class CouponCreateTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = 0
-        coupon['bound'] = False
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_lowercase_verification(self):
         """
@@ -43,16 +44,17 @@ class CouponCreateTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = 0
-        coupon['bound'] = False
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_cant_create_coupon_duplicate_name(self):
         """
@@ -65,27 +67,28 @@ class CouponCreateTests(BasicTest):
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
-
-        coupon['code_l'] = coupon['code'].lower()
-        coupon['repeat'] = 0
-        coupon['bound'] = False
-
-        self.verify_built(coupon, response.data)
-
         # Create duplicate.
         coupon2 = {
             'code': 'AsdF',
             'type': 'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon2, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
+
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
+
+            self.verify_built(coupon, response.data)
+
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon2, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.logout()
 
     def test_cant_create_coupon_invalid_percentage(self):
         """
@@ -98,10 +101,11 @@ class CouponCreateTests(BasicTest):
             'value':  2,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.logout()
 
     def test_can_create_coupon_expires(self):
         """
@@ -116,10 +120,11 @@ class CouponCreateTests(BasicTest):
             'expires': str(future),
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
     def test_cant_create_coupon_after_expiration(self):
         """
@@ -134,10 +139,11 @@ class CouponCreateTests(BasicTest):
             'expires': str(past),
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.logout()
 
     def test_can_create_coupon_case_i(self):
         """
@@ -152,14 +158,15 @@ class CouponCreateTests(BasicTest):
             'repeat': 1,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_ii(self):
         """
@@ -172,14 +179,15 @@ class CouponCreateTests(BasicTest):
             'repeat': 1,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_iii(self):
         """
@@ -194,14 +202,15 @@ class CouponCreateTests(BasicTest):
             'repeat': 0,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_iv(self):
         """
@@ -213,14 +222,15 @@ class CouponCreateTests(BasicTest):
             'type':   'percent',
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_v(self):
         """
@@ -235,14 +245,15 @@ class CouponCreateTests(BasicTest):
             'repeat': 10,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
     def test_can_create_coupon_case_vi(self):
         """
@@ -255,12 +266,13 @@ class CouponCreateTests(BasicTest):
             'repeat': 10,
         }
 
-        self.login(username='admin')
-        response = self.client.post('/coupon', coupon, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.logout()
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
 
-        coupon['code_l'] = coupon['code'].lower()
+            coupon['code_l'] = coupon['code'].lower()
 
-        self.verify_built(coupon, response.data)
+            self.verify_built(coupon, response.data)
 
