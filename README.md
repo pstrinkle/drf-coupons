@@ -1,6 +1,12 @@
 # drf-coupons
 A django-rest-framework application that provides many varieties of coupons 
 
+## Dependencies
+
+This project depends on:
+1. `djangorestframework`
+2. `django-filter`
+
 ## Setup instructions
 
 1. Install `drf-coupons` via pip:
@@ -8,9 +14,11 @@ A django-rest-framework application that provides many varieties of coupons
    $ pip install drf-coupons
    ```
 
-2. Add `'coupons'` to `INSTALLED_APPS` in `settings.py`.
+2. Add `'rest_framework'` to `INSTALLED_APPS` in `settings.py`.
 
-3. Migrate database:
+3. Add `'coupons'` to `INSTALLED_APPS` in `settings.py`.
+
+4. Migrate database:
 
    ```
    $ python manage.py migrate
@@ -23,7 +31,7 @@ A django-rest-framework application that provides many varieties of coupons
    You can specify a list of groups that can perform specific actions against the coupons, such as restricting who can
    create or list coupons.
 
-   By default all endpoints are open.
+   By default all endpoints are open except list. 
 
    ```
    COUPON_PERMISSIONS = {
@@ -48,15 +56,21 @@ A django-rest-framework application that provides many varieties of coupons
    ]
    ```
 
-   | Endpoint                  | Details                                        |
-   | ------------------------- | ---------------------------------------------- |
-   | `GET /coupon`             | List all coupons                               |
-   | `GET /coupon/{pk}`        | Retrieve details about a coupon by database id |
-   | `POST /coupon`            | Create a new coupon                            |
-   | `PUT /coupon/{pk}`        | Update a coupon                                |
-   | `DELETE /coupon/{pk}`     | Delete a coupon                                |
-   | `PUT /coupon/{pk}/redeem` | Redeem a coupon by database id                 |
-   | `PATCH /coupon/{pk}`      | Not supported                                  |
+   As stated above, by default any user in the system can touch any of the below endpoints, except where specified in bold.
+
+   | Endpoint                  | Details                                                                     |
+   | ------------------------- | --------------------------------------------------------------------------- |
+   | `GET /coupon`             | List all coupons in the system, **only superuser or in group can do this**. |
+   | `GET /coupon/{pk}`        | Retrieve details about a coupon by database id                              |
+   | `POST /coupon`            | Create a new coupon                                                         |
+   | `PUT /coupon/{pk}`        | Update a coupon                                                             |
+   | `DELETE /coupon/{pk}`     | Delete a coupon                                                             |
+   | `PUT /coupon/{pk}/redeem` | Redeem a coupon by database id                                              |
+   | `PATCH /coupon/{pk}`      | **Not supported**                                                           |
+
+## Querying
+
+`GET /coupon` supports querying by coupon code, and filter by `user`, `bound`, `type` or by ranges of discount via `max_value`, `min_value`
 
 ## Coupon Types
 
