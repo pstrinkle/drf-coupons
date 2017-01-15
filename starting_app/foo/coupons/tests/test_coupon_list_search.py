@@ -13,7 +13,7 @@ class CouponListSearchTests(BasicTest):
 
     def test_can_search_coupon(self):
         """
-        Verify admins can list coupons.
+        Verify admins can search coupons.
         """
 
         coupon = {
