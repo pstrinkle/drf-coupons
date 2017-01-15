@@ -31,19 +31,22 @@ This project depends on:
    You can specify a list of groups that can perform specific actions against the coupons, such as restricting who can
    create or list coupons.
 
-   By default all endpoints are open except list. 
+   By default all endpoints are open except list.
+
+   `retrieve` does not allow restriction because it doesn't generally need to support such permissions.
+
+   `patch` is not supported as an endpoint and is therefore also not in the `COUPON_PERMISSIONS`.
 
    ```
    COUPON_PERMISSIONS = {
        'CREATE': ['groupa', 'groupb'],
        'LIST': ['groupa'],
        'DELETE': ['groupb'],
-       'RETRIEVE': ['groupa'],
        'UPDATE': ['groupb'],
    }
    ```
 
-   You don't need to specify every endpoint in the list and can provide an empty list.
+   You don't need to specify every endpoint in the list and can provide an empty list for an endpoint.
 
 2. Communicate with coupon endpoints.
 

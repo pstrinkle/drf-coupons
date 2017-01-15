@@ -93,6 +93,17 @@ class CouponViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @method_decorator(group_required('DELETE'))
+    def destroy(self, request, pk=None, **kwargs):
+        """
+        Delete the coupon.
+        """
+
+        coupon = get_object_or_404(Coupon.objects.all(), pk=pk)
+        coupon.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def partial_update(self, request, pk=None, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -102,8 +113,7 @@ class CouponViewSet(viewsets.ModelViewSet):
         This forces it to return a 202 upon success instead of 200.
         """
 
-        queryset = Coupon.objects.all()
-        coupon = get_object_or_404(queryset, pk=pk)
+        coupon = get_object_or_404(Coupon.objects.all(), pk=pk)
 
         serializer = CouponSerializer(coupon, data=request.data, context={'request': request})
         if serializer.is_valid():

@@ -34,6 +34,29 @@ class CouponCreateTests(BasicTest):
 
             self.verify_built(coupon, response.data)
 
+    def test_can_create_coupon_code_codel_mismatch(self):
+        """
+        Verify that even if you specify the lowercase version of the code when creating, it'll be ignored.
+        """
+
+        coupon = {
+            'code':   'ASDF',
+            'code_l': 'mismatch',
+            'type':   'percent',
+        }
+
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.logout()
+
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
+
+            self.verify_built(coupon, response.data)
+
     def test_can_create_coupon_lowercase_verification(self):
         """
         Verify creating a coupon creates a lowercase version if it's identifier.

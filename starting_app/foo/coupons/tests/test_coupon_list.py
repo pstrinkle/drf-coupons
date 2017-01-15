@@ -24,9 +24,9 @@ class CouponListTests(BasicTest):
 
         with self.settings(ROOT_URLCONF='coupons.urls'):
             self.login(username='admin')
+
             response = self.client.post('/coupon', coupon, format='json')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.logout()
 
             coupon['code_l'] = coupon['code'].lower()
             coupon['repeat'] = 0
@@ -34,10 +34,62 @@ class CouponListTests(BasicTest):
 
             self.verify_built(coupon, response.data)
 
+            coupon['code'] = 'new_one'
+            del coupon['code_l']
+
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            coupon['code_l'] = coupon['code'].lower()
+
+            self.verify_built(coupon, response.data)
+
+            response = self.client.get('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(2, len(response.data))
+
+            self.logout()
+
     def test_cant_list_coupons(self):
         """
         Verify normal users can't.  The group specific test in a different file.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code': 'ASDF',
+            'type': 'percent',
+        }
 
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+            self.login(username='admin')
+
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            coupon['code_l'] = coupon['code'].lower()
+            coupon['repeat'] = 0
+            coupon['bound'] = False
+
+            self.verify_built(coupon, response.data)
+
+            coupon['code'] = 'new_one'
+            del coupon['code_l']
+
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            coupon['code_l'] = coupon['code'].lower()
+
+            self.verify_built(coupon, response.data)
+
+            response = self.client.get('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(2, len(response.data))
+
+            self.logout()
+
+            self.login(username='user')
+            response = self.client.get('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(0, len(response.data))
+            self.logout()
