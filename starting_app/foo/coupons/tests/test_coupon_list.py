@@ -44,7 +44,7 @@ class CouponListTests(BasicTest):
 
             self.verify_built(coupon, response.data)
 
-            response = self.client.get('/coupon', coupon, format='json')
+            response = self.client.get('/coupon', format='json')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(2, len(response.data))
 
@@ -82,14 +82,14 @@ class CouponListTests(BasicTest):
 
             self.verify_built(coupon, response.data)
 
-            response = self.client.get('/coupon', coupon, format='json')
+            response = self.client.get('/coupon', format='json')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(2, len(response.data))
 
             self.logout()
 
             self.login(username='user')
-            response = self.client.get('/coupon', coupon, format='json')
+            response = self.client.get('/coupon', format='json')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(0, len(response.data))
             self.logout()
