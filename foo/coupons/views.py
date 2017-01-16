@@ -136,6 +136,28 @@ class CouponViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    def retrieve(self, request, pk=None, **kwargs):
+        """
+        Anybody can retrieve any coupon.
+        """
+
+        value_is_int = False
+
+        try:
+            pk = int(pk)
+            value_is_int = True
+        except ValueError:
+            pass
+
+        if value_is_int:
+            coupon = get_object_or_404(Coupon.objects.all(), pk=pk)
+        else:
+            coupon = get_object_or_404(Coupon.objects.all(), code_l=pk.lower())
+
+        serializer = CouponSerializer(coupon, context={'request': request})
+
+        return Response(serializer.data)
+
     @method_decorator(group_required('UPDATE'))
     def update(self, request, pk=None, **kwargs):
         """
@@ -209,6 +231,9 @@ class ClaimedCouponViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     def partial_update(self, request, pk=None, **kwargs):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def retrieve(self, request, pk=None, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, pk=None, **kwargs):

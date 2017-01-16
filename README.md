@@ -49,6 +49,10 @@ This project depends on:
 
    You don't need to specify every endpoint in the list and can provide an empty list for an endpoint.
 
+   The groups specified for `REDEEMED` are used in both `GET /coupon/{pk}/redeemed` and `GET /redeemed`.
+   
+   The groups specified for `DELETE` are used in both `DELETE /coupon/{pk}` and `DELETE /redeemed/{pk}`. 
+
 2. Communicate with coupon endpoints.
 
    You can place the urls into a subpath, however you like:
@@ -79,6 +83,13 @@ This project depends on:
 `GET /coupon` supports querying by coupon code, and filter by `user`, `bound`, `type` or by ranges of discount via `max_value`, `min_value`
 
 `GET /redeemed` supports filtering by `user`.
+
+## Objects
+
+There are two objects provided:
+
+1. `Coupon` - allows you to specify the properties of the coupon itself.
+2. `ClaimedCoupon` - allows you to track whenever a user redeems a coupon.
 
 ## Coupon Types
 
