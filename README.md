@@ -90,16 +90,24 @@ There are two objects provided:
 
 1. `Coupon` - allows you to specify the properties of the coupon itself.
 
-   | Field | Type | Meaning |
-   | ----- | ---- | ------- |
+   | Field     | Type          | Meaning                                                |
+   | --------- | ------------- | ------------------------------------------------------ |
+   | `code`    | `string`      | the code for the coupon, case insensitive              |
+   | `code_l`  | `string`      | automatically set lowercase version of the coupon code |
+   | `type`    | `string`      | either `percent` or `value`, how the `value` field should be interpreted |
+   | `expires` | `datetime`    | optional field to set when the coupon expires          |
+   | `value`   | `decimal`     | the value for the coupon, such as `100` or `0.50`      |
+   | `bound`   | `boolean`     | if `true` then the coupon can only be used by the specified user in the `user` field |
+   | `user`    | `foreign key` | set when bound to point to the user                    |
+   | `repeat`  | `integer`     | if `0` the coupon can be used infinitely, otherwise it specifies how often any system user can use it |
 
 2. `ClaimedCoupon` - allows you to track whenever a user redeems a coupon.
 
-   | Field      | Type        | Meaning                                                |
-   | ---------- | ----------- | ------------------------------------------------------ |
-   | `redeemed` | datetime    | automatically set when a coupon is redeemed            | 
-   | `coupon`   | foreign key | automatically set to point at the coupon when redeemed |
-   | `user`     | foreign key | automatically set to point at the coupon when redeemed |
+   | Field      | Type          | Meaning                                                |
+   | ---------- | ------------- | ------------------------------------------------------ |
+   | `redeemed` | `datetime`    | automatically set when a coupon is redeemed            | 
+   | `coupon`   | `foreign key` | automatically set to point at the coupon when redeemed |
+   | `user`     | `foreign key` | automatically set to point at the coupon when redeemed |
 
 ## Coupon Types
 
