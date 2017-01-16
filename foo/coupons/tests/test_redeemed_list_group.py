@@ -7,7 +7,7 @@ from rest_framework import status
 from coupons.tests.base import BasicTest
 
 
-class RedeemedSettingsTests(BasicTest):
+class RedeemedListSettingsTests(BasicTest):
 
     def setUp(self):
         u = get_user_model()
@@ -44,7 +44,7 @@ class RedeemedSettingsTests(BasicTest):
             self.assertEqual(2, len(response.data))
             self.logout()
 
-    def test_cant_redeemed_if_not_in_group(self):
+    def test_cant_list_redeemed_if_not_in_group(self):
         """
         Verify the user can restrict permissions.
         """
@@ -59,7 +59,7 @@ class RedeemedSettingsTests(BasicTest):
                 self.assertEqual(self.user.id, response.data[0]['user'])
                 self.logout()
 
-    def test_cant_redeemed_if_group_empty(self):
+    def test_cant_list_redeemed_if_group_empty(self):
         """
         Verify the user can restrict permissions.
         """
@@ -74,7 +74,7 @@ class RedeemedSettingsTests(BasicTest):
                 self.assertEqual(self.user.id, response.data[0]['user'])
                 self.logout()
 
-    def test_can_redeemed_if_in_group(self):
+    def test_can_list_redeemed_if_in_group(self):
         """
         Verify the user can restrict permissions.
         """
