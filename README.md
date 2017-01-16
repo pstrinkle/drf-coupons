@@ -78,6 +78,8 @@ This project depends on:
 
 `GET /coupon` supports querying by coupon code, and filter by `user`, `bound`, `type` or by ranges of discount via `max_value`, `min_value`
 
+`GET /redeemed` supports filtering by `user`.
+
 ## Coupon Types
 
 It supports the following variations of coupons:
@@ -101,3 +103,4 @@ You create coupons in the system that are then claimed by users.
 
 The unit-tests should automatically be run when you run `python manage.py test` and they are isolated.
 
+If you'd like to contribute, please fork, and develop, branch from the `development` branch to and submit a pull request when ready.
