@@ -24,6 +24,8 @@ This project depends on:
    $ python manage.py migrate
    ```
 
+**Note:** this package was not developed to be compatible side-by-side with `django-coupons`, as they serve very similar needs.
+
 ## Usage
 
 1. Specify permissions for interacting with coupon endpoints.
