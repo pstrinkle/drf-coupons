@@ -227,8 +227,16 @@ class ClaimedCouponViewSet(viewsets.ModelViewSet):
     def create(self, request, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    @method_decorator(group_required('DELETE'))
     def destroy(self, request, pk=None, **kwargs):
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        """
+        Basically un-redeem a coupon.
+        """
+
+        redeemed = get_object_or_404(ClaimedCoupon.objects.all(), pk=pk)
+        redeemed.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk=None, **kwargs):
         return Response(status=status.HTTP_404_NOT_FOUND)
