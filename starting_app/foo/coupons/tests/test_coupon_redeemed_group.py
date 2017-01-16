@@ -56,6 +56,7 @@ class CouponRedeemedSettingsTests(BasicTest):
                 response = self.client.get('/coupon/%s/redeemed' % self.coupon_id, format='json')
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
                 self.assertEqual(1, len(response.data))
+                self.assertEqual(self.user.id, response.data[0]['user'])
                 self.logout()
 
     def test_cant_redeemed_coupon_if_group_empty(self):
@@ -70,6 +71,7 @@ class CouponRedeemedSettingsTests(BasicTest):
                 response = self.client.get('/coupon/%s/redeemed' % self.coupon_id, format='json')
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
                 self.assertEqual(1, len(response.data))
+                self.assertEqual(self.user.id, response.data[0]['user'])
                 self.logout()
 
     def test_can_redeemed_coupon_if_in_group(self):
