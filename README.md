@@ -43,6 +43,7 @@ This project depends on:
        'LIST': ['groupa'],
        'DELETE': ['groupb'],
        'UPDATE': ['groupb'],
+       'REDEEMED': ['groupc'],
    }
    ```
 
@@ -61,15 +62,16 @@ This project depends on:
 
    As stated above, by default any user in the system can touch any of the below endpoints, except where specified in bold.
 
-   | Endpoint                  | Details                                                                     |
-   | ------------------------- | --------------------------------------------------------------------------- |
-   | `GET /coupon`             | List all coupons in the system, **only superuser or in group can do this**. |
-   | `GET /coupon/{pk}`        | Retrieve details about a coupon by database id                              |
-   | `POST /coupon`            | Create a new coupon                                                         |
-   | `PUT /coupon/{pk}`        | Update a coupon                                                             |
-   | `DELETE /coupon/{pk}`     | Delete a coupon                                                             |
-   | `PUT /coupon/{pk}/redeem` | Redeem a coupon by database id                                              |
-   | `PATCH /coupon/{pk}`      | **Not supported**                                                           |
+   | Endpoint                    | Details                                                                                 |
+   | --------------------------- | --------------------------------------------------------------------------------------- |
+   | `GET /coupon`               | List all coupons in the system, **only superuser or in group can do this**.             |
+   | `GET /coupon/{pk}`          | Retrieve details about a coupon by database id                                          |
+   | `POST /coupon`              | Create a new coupon                                                                     |
+   | `PUT /coupon/{pk}`          | Update a coupon                                                                         |
+   | `DELETE /coupon/{pk}`       | Delete a coupon                                                                         |
+   | `PUT /coupon/{pk}/redeem`   | Redeem a coupon by database id                                                          |
+   | `GET /coupon/{pk}/redeemed` | List all times specified coupon was redeemed, **superuser or group member can see all** |
+   | `PATCH /coupon/{pk}`        | **Not supported**                                                                       |
 
 ## Querying
 

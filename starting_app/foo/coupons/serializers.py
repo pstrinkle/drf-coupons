@@ -90,6 +90,7 @@ class ClaimedCouponSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Coupon bound to another user.")
 
         # Is the coupon redeemed already beyond what's allowed?
+        # XXX
 
         return data
 

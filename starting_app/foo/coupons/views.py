@@ -1,12 +1,11 @@
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import filters
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
@@ -14,10 +13,8 @@ from coupons.filters import CouponFilter
 from coupons.models import Coupon, ClaimedCoupon
 from coupons.serializers import CouponSerializer, ClaimedCouponSerializer
 
-from django.contrib.auth.decorators import user_passes_test
 
-
-# https://djangosnippets.org/snippets/1703/
+# based on https://djangosnippets.org/snippets/1703/
 def group_required(api_command):
     """
     This is implemented such that it's default open.
@@ -42,6 +39,38 @@ def group_required(api_command):
                     return True
         return False
     return user_passes_test(in_groups)
+
+
+def get_redeemed_queryset(user, coupon_id=None):
+    """
+    Return a consistent list of the redeemed list.  across the two endpoints.
+    """
+
+    api_command = 'REDEEMED'
+
+    # If the a coupon isn't specified, get them all.
+    if coupon_id is None:
+        qs_all = ClaimedCoupon.objects.all()
+        qs_some = ClaimedCoupon.objects.filter(user=user.id)
+    else:
+        qs_all = ClaimedCoupon.objects.filter(coupon=coupon_id)
+        qs_some = ClaimedCoupon.objects.filter(coupon=coupon_id, user=user.id)
+
+    if user.is_superuser:
+        return qs_all
+
+    if settings.COUPON_PERMISSIONS and api_command in settings.COUPON_PERMISSIONS:
+        group_names = settings.COUPON_PERMISSIONS[api_command]
+
+        # So the setting is left empty, so default behavior.
+        if len(group_names) == 0:
+            return qs_some
+
+        # group specified, so only those in the group can.
+        if bool(user.groups.filter(name__in=group_names)):
+            return qs_all
+
+    return qs_some
 
 
 class CouponViewSet(viewsets.ModelViewSet):
@@ -122,6 +151,19 @@ class CouponViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @detail_route(methods=['get'])
+    def redeemed(self, request, pk=None, **kwargs):
+        """
+        Convenience endpoint for getting list of claimed instances for a coupon.
+        """
+
+        coupon = get_object_or_404(Coupon.objects.all(), pk=pk)
+        qs = get_redeemed_queryset(self.request.user, coupon.id)
+
+        serializer = ClaimedCouponSerializer(qs, many=True, context={'request': request})
+
+        return Response(serializer.data)
+
     @detail_route(methods=['put'])
     def redeem(self, request, pk=None, **kwargs):
         """
@@ -146,3 +188,29 @@ class CouponViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ClaimedCouponViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that lets you retrieve claimed coupon details.
+    """
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('user',)
+    serializer_class = ClaimedCouponSerializer
+
+    def get_queryset(self):
+        return get_redeemed_queryset(self.request.user)
+
+    def create(self, request, **kwargs):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, pk=None, **kwargs):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def partial_update(self, request, pk=None, **kwargs):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk=None, **kwargs):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
