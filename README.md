@@ -95,8 +95,11 @@ There are two objects provided:
 
 2. `ClaimedCoupon` - allows you to track whenever a user redeems a coupon.
 
-   | Field | Type | Meaning |
-   | ----- | ---- | ------- |
+   | Field      | Type        | Meaning                                                |
+   | ---------- | ----------- | ------------------------------------------------------ |
+   | `redeemed` | datetime    | automatically set when a coupon is redeemed            | 
+   | `coupon`   | foreign key | automatically set to point at the coupon when redeemed |
+   | `user`     | foreign key | automatically set to point at the coupon when redeemed |
 
 ## Coupon Types
 
