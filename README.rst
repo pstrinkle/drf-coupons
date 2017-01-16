@@ -4,7 +4,8 @@ DRF Coupons
 
 A django-rest-framework application that provides many varieties of coupons
 
-Detailed documentation is in the README.md file.
+Detailed documentation:
+* https://github.com/pstrinkle/drf-coupons
 
 Quick start
 -----------
