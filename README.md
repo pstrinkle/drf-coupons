@@ -89,7 +89,14 @@ This project depends on:
 There are two objects provided:
 
 1. `Coupon` - allows you to specify the properties of the coupon itself.
+
+   | Field | Type | Meaning |
+   | ----- | ---- | ------- |
+
 2. `ClaimedCoupon` - allows you to track whenever a user redeems a coupon.
+
+   | Field | Type | Meaning |
+   | ----- | ---- | ------- |
 
 ## Coupon Types
 
