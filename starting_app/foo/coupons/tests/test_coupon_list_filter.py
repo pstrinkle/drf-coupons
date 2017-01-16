@@ -127,10 +127,15 @@ class CouponListFilterTests(BasicTest):
             self.login(username='user')
             response = self.client.get('/coupon', format='json')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(0, len(response.data))
+            self.assertEqual(1, len(response.data))
 
             response = self.client.get('/coupon', {'type': 'value', 'min_value': 0.50}, format='json')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(0, len(response.data))
 
+            response = self.client.get('/coupon', {'type': 'percent', 'bound': True}, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(1, len(response.data))
+
             self.logout()
+

@@ -61,7 +61,7 @@ class CouponViewSet(viewsets.ModelViewSet):
 
         api_command = 'LIST'
         qs_all = Coupon.objects.all()
-        qs_none = Coupon.objects.none()
+        qs_some = Coupon.objects.filter(bound=True, user=self.request.user.id)
 
         if self.request.user.is_superuser:
             return qs_all
@@ -72,13 +72,13 @@ class CouponViewSet(viewsets.ModelViewSet):
 
             # So the setting is left empty, so default behavior.
             if len(group_names) == 0:
-                return qs_none
+                return qs_some
 
             # group specified, so only those in the group can.
             if bool(self.request.user.groups.filter(name__in=group_names)):
                 return qs_all
 
-        return qs_none
+        return qs_some
 
     @method_decorator(group_required('CREATE'))
     def create(self, request, **kwargs):
