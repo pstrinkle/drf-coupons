@@ -64,7 +64,7 @@ This project depends on:
 
    | Endpoint                    | Details                                                                                 |
    | --------------------------- | --------------------------------------------------------------------------------------- |
-   | `GET /coupon`               | List all coupons in the system, **only superuser or in group can do this**.             |
+   | `GET /coupon`               | List all coupons in the system, **only superuser or in group can see all**.             |
    | `GET /coupon/{pk}`          | Retrieve details about a coupon by database id                                          |
    | `POST /coupon`              | Create a new coupon                                                                     |
    | `PUT /coupon/{pk}`          | Update a coupon                                                                         |
@@ -72,6 +72,7 @@ This project depends on:
    | `PUT /coupon/{pk}/redeem`   | Redeem a coupon by database id                                                          |
    | `GET /coupon/{pk}/redeemed` | List all times specified coupon was redeemed, **superuser or group member can see all** |
    | `PATCH /coupon/{pk}`        | **Not supported**                                                                       |
+   | `GET /redeemed`             | List all redeemed instances, filter-able **only superuser or in group can do see all**  | 
 
 ## Querying
 

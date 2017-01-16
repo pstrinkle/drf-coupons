@@ -20,6 +20,7 @@ import views
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'coupon', views.CouponViewSet, base_name='coupon')
+router.register(r'redeemed', views.ClaimedCouponViewSet, base_name='redeemed')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
