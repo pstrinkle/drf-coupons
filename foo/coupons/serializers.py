@@ -90,7 +90,13 @@ class ClaimedCouponSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Coupon bound to another user.")
 
         # Is the coupon redeemed already beyond what's allowed?
-        # XXX
+        redeemed = ClaimedCoupon.objects.filter(coupon=coupon.id, user=user.id).count()
+        if coupon.repeat > 0:
+            if redeemed >= coupon.repeat:
+                # Already too many times (note: we don't update the claimed coupons, so this is a fine test).
+                # Also, yes, > should never happen because the equals check will be hit first, but just in case
+                # you somehow get beyond that... ;)
+                raise serializers.ValidationError("Coupon has been used to its limit.")
 
         return data
 

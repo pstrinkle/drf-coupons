@@ -126,4 +126,26 @@ class CouponRedeemTests(BasicTest):
         Verify you can't redeem a coupon more than allowed.
         """
 
-        self.assertTrue(True)
+        coupon = {
+            'code':   'ASDF',
+            'type':   'percent',
+            'repeat': 2,
+        }
+
+        with self.settings(ROOT_URLCONF='coupons.urls'):
+
+            self.login(username='admin')
+            response = self.client.post('/coupon', coupon, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            coupon_id = response.data['id']
+
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            response = self.client.put('/coupon/%s/redeem' % coupon_id, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            self.logout()
