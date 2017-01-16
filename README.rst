@@ -1,6 +1,6 @@
-=====
-Coupons
-=====
+
+DRF Coupons
+-----------
 
 A django-rest-framework application that provides many varieties of coupons
 
@@ -20,5 +20,5 @@ Quick start
 
     url(r'^', include('coupons.urls')),
 
-3. Run `python manage.py migrate` to create the polls models.
+3. Run ``python manage.py migrate`` to create the polls models.
 
